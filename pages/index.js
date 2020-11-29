@@ -1,65 +1,80 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { useState, useEffect } from "react";
+import styles from "../styles/Home.module.css";
+import SplitWords from "./components/SplitWords";
 
 export default function Home() {
+  const [text, setText] = useState("");
+  const [alphabetType, setAlphabetType] = useState("AT_T");
+  const [show, setShow] = useState(false);
+  const [savedWords, setSavedWords] = useState([]);
+
+  useEffect(() => {
+    let savedWords = JSON.parse(localStorage.getItem("saved-words")) || [];
+    setSavedWords(savedWords);
+  }, []);
+
+  const handleWordChange = (e) => {
+    const value = e.target.value.replace(/[^A-Za-z ]/gi, "");
+    setText(value);
+    setShow(false);
+  };
+
+  const handleResetClick = () => {
+    if (show) setText("");
+    if (text !== "") {
+      setShow(false);
+      let savedWords = JSON.parse(localStorage.getItem("saved-words")) || [];
+      setSavedWords(savedWords);
+      savedWords.unshift(text);
+      localStorage.setItem(
+        "saved-words",
+        JSON.stringify(savedWords.slice(0, 9))
+      );
+    }
+    setShow(!show);
+  };
+
+  const handleRadioChange = (e) => {
+    setAlphabetType(e.currentTarget.value);
+  };
+
   return (
     <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+      <div className={styles.alphabet}>
+        <input value={text} onChange={handleWordChange} type="text" />
+        <button onClick={handleResetClick}>{show ? "Reset" : "Show"}</button>
+      </div>
+      {show && (
+        <div>
+          <input
+            type="radio"
+            name="AT_T"
+            value="AT_T"
+            checked={alphabetType === "AT_T"}
+            onChange={handleRadioChange}
+          />
+          AT&T
+          <input
+            type="radio"
+            name="NATO"
+            value="NATO"
+            checked={alphabetType === "NATO"}
+            onChange={handleRadioChange}
+          />
+          NATO
+          <SplitWords words={text} alphabetType={alphabetType} />
         </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+      )}
+      <div>
+        {!!savedWords.length && (
+          <>
+            <h2>History</h2>
+            {savedWords.map((savedWord, index) => {
+              return <p key={index}>{savedWord}</p>;
+            })}
+          </>
+        )}
+      </div>
     </div>
-  )
+  );
 }
