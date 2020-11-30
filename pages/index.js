@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { Button } from "react-bootstrap";
 import styles from "../styles/Home.module.css";
-import SplitWords from "./components/SplitWords";
+import SplitWords from "../components/SplitWords";
 
 export default function Home() {
   const [text, setText] = useState("");
@@ -40,35 +41,44 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.alphabet}>
-        <input value={text} onChange={handleWordChange} type="text" />
-        <button onClick={handleResetClick}>{show ? "Reset" : "Show"}</button>
-      </div>
-      {show && (
-        <div>
-          <input
-            type="radio"
-            name="AT_T"
-            value="AT_T"
-            checked={alphabetType === "AT_T"}
-            onChange={handleRadioChange}
-          />
-          AT&T
-          <input
-            type="radio"
-            name="NATO"
-            value="NATO"
-            checked={alphabetType === "NATO"}
-            onChange={handleRadioChange}
-          />
-          NATO
-          <SplitWords words={text} alphabetType={alphabetType} />
+      <div>
+        <div className={styles.alphabet}>
+          <input value={text} onChange={handleWordChange} type="text" />
+          <Button onClick={handleResetClick}>{show ? "Reset" : "Show"}</Button>
         </div>
-      )}
+        {show && (
+          <div className={styles.radio}>
+            <div>
+              <input
+                id="AT_T"
+                type="radio"
+                name="AT_T"
+                value="AT_T"
+                checked={alphabetType === "AT_T"}
+                onChange={handleRadioChange}
+              />
+              <label htmlFor="AT_T">AT&T</label>
+            </div>
+            <div>
+              {" "}
+              <input
+                id="NATO"
+                type="radio"
+                name="NATO"
+                value="NATO"
+                checked={alphabetType === "NATO"}
+                onChange={handleRadioChange}
+              />
+              <label htmlFor="NATO">NATO</label>
+            </div>
+            <SplitWords words={text} alphabetType={alphabetType} />
+          </div>
+        )}
+      </div>
       <div>
         {!!savedWords.length && (
           <>
-            <h2>History</h2>
+            <h2>Recent words</h2>
             {savedWords.map((savedWord, index) => {
               return <p key={index}>{savedWord}</p>;
             })}

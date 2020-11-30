@@ -3,7 +3,8 @@
   padding: 0 0.5rem;
   display: flex;
   justify-content: center;
-  align-items: center;
+  text-align: center;
+  margin-top: 100px;
 }
 .container > div {
   margin-right: 50px;
@@ -14,4 +15,11 @@
 .alphabet div {
   margin: 50px;
   padding: 20px;
+}
+.iterateWord {
+  margin: 20px;
+  border: 1px solid lightblue;
+}
+.radio {
+  margin: 20px;
 }
