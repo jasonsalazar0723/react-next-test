@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "react-bootstrap";
 import { AT_T, NATO } from "../pages/constants";
-import styles from "../../spelling/styles/Home.module.css";
+import styles from "../styles/Home.module.css";
 
 export default function SplitWords({ words, alphabetType }) {
   const alphabet = alphabetType === "AT_T" ? AT_T : NATO;
